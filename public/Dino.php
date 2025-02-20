@@ -39,14 +39,15 @@ class Dino{
     private ?PHPMailer $mailer;
 
     public function __construct(string $nameApp, string $rootDir, array $DBconfig = [], string $DBdriver = Database::PDO_DRIVER, int $mode = self::DEVELOPMENT_MODE, array $emailConfig = []){
+        
+        self::$ROOT_DIR = $rootDir;
+        self::$APP_NAME = $nameApp;
+        
         $this->setupLogger();
         $this->setupErrorHandling($mode, $emailConfig);
 
         if(empty($config))
             throw new InvalidArgumentException("config array must be configured");
-
-        self::$ROOT_DIR = $rootDir;
-        self::$APP_NAME = $nameApp;
 
         $this->database = new Database($DBconfig, $DBdriver);
         $this->response = new Response(self::$ROOT_DIR);
