@@ -7,25 +7,8 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class Installer{
 
-    public static function postInstall(): void{
-
-        if(!self::isRootPackage())
-            self::createProjectStructure();
-    }
-
-    public static function isRootPackage():bool{
-        $composerJsonPath = __DIR__ . '/../../composer.json';
-
-        if (!file_exists($composerJsonPath)) {
-            return true; // Si no existe, asume que es el paquete principal
-        }
-
-        // Lee el contenido del composer.json
-        $composerJson = json_decode(file_get_contents($composerJsonPath), true);
-
-        // Verifica si el nombre del paquete es el del paquete principal
-        return ($composerJson['name'] ?? '') === 'joel/dino-framework';
-        
+    public static function cmdInstall():void{
+        self::createProjectStructure();
     }
 
     public static function createProjectStructure():void{

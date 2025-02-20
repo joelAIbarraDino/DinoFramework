@@ -6,4 +6,4 @@ require __DIR__ . '/../vendor/autoload.php';
 use DinoEngine\Installer;
 
 // Ejecuta el instalador manualmente
-Installer::postInstall();
+Installer::cmdInstall();
