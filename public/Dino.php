@@ -4,6 +4,7 @@ namespace DinoFrame;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use DinoEngine\Helpers\Helpers;
 use DinoEngine\Core\Database;
 use DinoEngine\Http\Response;
 use DinoEngine\Http\Request;
@@ -21,7 +22,6 @@ use Whoops\Run;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
-use function DinoEngine\Helpers\pathExists;
 
 class Dino{
     public const DEVELOPMENT_MODE = 1;
@@ -48,7 +48,7 @@ class Dino{
         $this->setupLogger();
         $this->setupErrorHandling($mode, $emailConfig);
 
-        if(empty($config))
+        if(empty($DBconfig))
             throw new InvalidArgumentException("config array must be configured");
 
         $this->database = new Database($DBconfig, $DBdriver);
@@ -60,7 +60,7 @@ class Dino{
     private function setupLogger(): void{
 
         $this->logger = new Logger(self::$APP_NAME);
-        pathExists(self::$ROOT_DIR .'/logs/');
+        Helpers::pathExists(self::$ROOT_DIR .'/logs/');
         
         $logFile = self::$ROOT_DIR .'/logs/error.log';
         $this->logger->pushHandler(new StreamHandler($logFile, Logger::ERROR));
