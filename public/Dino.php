@@ -2,6 +2,8 @@
 
 namespace DinoFrame;
 
+require_once __DIR__."/../vendor/autoload";
+
 use DinoEngine\Core\Database;
 use DinoEngine\Http\Response;
 use DinoEngine\Http\Request;
