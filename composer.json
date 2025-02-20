@@ -15,5 +15,13 @@
         "phpmailer/phpmailer": "^6.9",
         "monolog/monolog": "^3.8",
         "symfony/filesystem": "^7.2"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "DinoEngine\\Installer::postInstall"
+        ],
+        "post-update-cmd": [
+            "DinoEngine\\Installer::postInstall"
+        ]
     }
 }
