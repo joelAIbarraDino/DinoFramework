@@ -5,14 +5,33 @@ namespace DinoEngine;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
-class Installer
-{
-    public static function postInstall(): void
-    {
+use Composer\Script\Event;
+
+class Installer{
+
+    public static function postInstall(Event $event): void{
+
+        $composer = $event->getComposer();
+        $packageName = 'joel/dino-framework'; // Cambia esto por el nombre real de tu paquete
+
+        // Verifica si el paquete está en el proyecto principal o si es un requerimiento
+        $isRoot = $composer->getPackage()->getName() === $packageName;
+
+        if ($isRoot) {
+            echo "El paquete está en desarrollo, no ejecutando el script.\n";
+            return;
+        }
+
+        echo "Ejecutando script postInstall para una instalación externa...\n";
+
+
         $filesystem = new Filesystem();
 
         // Obtén la ruta base del proyecto (donde se está instalando el framework)
         $baseDir = getcwd(); // Obtiene el directorio actual de trabajo (raíz del proyecto)
+
+        if($filesystem == __DIR__)
+            return; 
 
         // Estructura de carpetas a crear
         $directories = [
