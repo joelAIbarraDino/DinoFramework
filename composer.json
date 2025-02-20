@@ -1,0 +1,19 @@
+{
+    "name": "joel/dino-framework",
+    "description": "Framework chido para aplicaciones web chidas",
+    "version":"1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joel Alejandro Ibarra Villar",
+            "email": "joelvillar35@gmail.com"
+        }
+    ],
+    "require": {
+        "filp/whoops": "^2.17",
+        "phpmailer/phpmailer": "^6.9",
+        "monolog/monolog": "^3.8",
+        "symfony/filesystem": "^7.2"
+    }
+}
