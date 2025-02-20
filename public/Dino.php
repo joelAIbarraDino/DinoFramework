@@ -2,7 +2,7 @@
 
 namespace DinoFrame;
 
-require_once __DIR__."/../vendor/autoload";
+require __DIR__ . '/../vendor/autoload.php';
 
 use DinoEngine\Core\Database;
 use DinoEngine\Http\Response;
