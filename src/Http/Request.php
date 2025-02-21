@@ -4,9 +4,8 @@ namespace DinoEngine\Http;
 
 class Request{
     
-    /**
-     * @return string string lower request method
-     */
+    private static array $urlParams = [];
+
     public static function getMethod():string{
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
@@ -38,7 +37,7 @@ class Request{
 
         $data = [];
         foreach ($_POST as $key => $value) {
-            $data[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            $data[$key] = filter_input(INPUT_POST, $value, FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
         return $data;
@@ -60,6 +59,14 @@ class Request{
     public static function getBody(): array{
         $input = file_get_contents('php://input');
         return json_decode($input, true) ?? [];
+    }
+
+    public static function getUrlParams():array{
+        return self::$urlParams;
+    }
+
+    public static function setUrlParams(array $params):void{
+        self::$urlParams = $params;
     }
 }
 
