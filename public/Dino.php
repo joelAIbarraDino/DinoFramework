@@ -41,7 +41,7 @@ class Dino{
     private ?PHPMailer $mailer;
     private array $emailConfig;
 
-    public function __construct(string $nameApp, string $rootDir, array $DBconfig = [], string $DBdriver = Database::PDO_DRIVER, int $mode = self::DEVELOPMENT_MODE, array $emailConfig){
+    public function __construct(string $nameApp, string $rootDir, array $DBconfig = [], string $DBdriver = Database::PDO_DRIVER, int $mode = self::DEVELOPMENT_MODE, array $emailConfig = null){
         
         self::$ROOT_DIR = $rootDir;
         self::$APP_NAME = $nameApp;
