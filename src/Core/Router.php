@@ -2,12 +2,19 @@
 
 namespace DinoEngine\Core;
 
+use DinoEngine\Helpers\Helpers;
 use DinoEngine\Http\Request;
 use DinoEngine\Http\Response;
+use DinoFrame\Dino;
 
 class Router{
     
     private array $routes = [];
+    private string $nameApp;
+
+    public function __construct(string $nameApp){
+        $this->nameApp = $nameApp;
+    }
 
     public function get(string $url, callable $fn, array $middlewares = []): void{
         $this->addRoute('get', $url, $fn, $middlewares);
@@ -43,10 +50,9 @@ class Router{
         // Busca la ruta que coincida con la URL
         foreach ($this->routes[$method] as $route => $config) {
             $pattern = $this->convertRouteToPattern($route);
-
             if (preg_match($pattern, $url, $matches)) {
+                $params = array($this->nameApp);
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
-
                 // Ejecuta los middlewares antes de llamar al controlador
                 $this->runMiddlewares($config['middlewares'], function () use ($config, $params) {
                     call_user_func_array($config['handler'], $params);

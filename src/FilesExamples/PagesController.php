@@ -6,7 +6,10 @@ use DinoEngine\Http\Response;
 
 class PagesController
 {
-    public static function index(): void{
-        Response::render('pages/indexExample', ['title' => 'Inicio']);
+    public static function index(string $nameApp): void{
+        Response::render('pages/indexExample', [
+            'nameApp'=>$nameApp, 
+            'title' => 'Inicio'
+        ]);
     }
 }

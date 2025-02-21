@@ -39,26 +39,24 @@ class Dino{
 
     private Logger $logger;
     private ?PHPMailer $mailer;
-    private array $emailConfig;
+    private ?array $emailConfig;
 
-    public function __construct(string $nameApp, string $rootDir, array $DBconfig = [], string $DBdriver = Database::PDO_DRIVER, int $mode = self::DEVELOPMENT_MODE, array $emailConfig = null){
+    public function __construct(string $nameApp, string $rootDir, array $DBconfig = [], string $DBdriver = Database::PDO_DRIVER, int $mode = self::DEVELOPMENT_MODE, ?array $emailConfig = null){
         
         self::$ROOT_DIR = $rootDir;
         self::$APP_NAME = $nameApp;
         
         $this->response = new Response(self::$ROOT_DIR);
-        $this->emailConfig = $emailConfig??null;
+        $this->router = new Router(self::$APP_NAME);
+        $this->emailConfig = $emailConfig;
         $this->request = new Request;
-        $this->router = new Router;
         $this->mailer = null;
-
+        
         $this->setupLogger();
         $this->setupErrorHandling($mode);
-
-        if(empty($DBconfig))
-            throw new InvalidArgumentException("config array must be configured");
-
         $this->database = new Database($DBconfig, $DBdriver);
+        
+        self::$dino = $this;
     }
 
     private function setupLogger(): void{
