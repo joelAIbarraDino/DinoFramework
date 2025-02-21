@@ -1,6 +1,6 @@
 <?php
 
-namespace DinoEngine\Middleware;
+namespace DinoEngine\Http\Middleware;
 
 use DinoEngine\Http\Response;
 
