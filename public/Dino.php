@@ -131,6 +131,7 @@ class Dino{
         $this->mailer->Username = $emailConfig['user'];
         $this->mailer->Port = $emailConfig['port'];
         $this->mailer->Host = $emailConfig['host'];
+        $this->mailer->CharSet = "UTF-8";
         $this->mailer->SMTPAuth = true;
     }
 }
