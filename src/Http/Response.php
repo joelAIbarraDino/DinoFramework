@@ -26,9 +26,9 @@ class Response{
         extract($data);
         
         ob_start();
-        include_once self::$baseDir."/app/views/$view.php";
+        include_once self::$baseDir."/app/Views/$view.php";
         $content = ob_get_clean();
-        include_once self::$baseDir."/app/views/master.php";
+        include_once self::$baseDir."/app/Views/master.php";
     }
 
     public static function error(string $msg, int $code):void{
