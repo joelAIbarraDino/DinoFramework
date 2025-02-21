@@ -51,8 +51,9 @@ class Router{
         foreach ($this->routes[$method] as $route => $config) {
             $pattern = $this->convertRouteToPattern($route);
             if (preg_match($pattern, $url, $matches)) {
-                $params = array($this->nameApp);
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                $params["nameApp"] =$this->nameApp;
+                Helpers::debuguear($params);
                 // Ejecuta los middlewares antes de llamar al controlador
                 $this->runMiddlewares($config['middlewares'], function () use ($config, $params) {
                     call_user_func_array($config['handler'], $params);
