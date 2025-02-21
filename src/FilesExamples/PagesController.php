@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use DinoEngine\Http\Response;
 
-class HomeController
+class PageController
 {
     public static function index(): void{
-        Response::render('indexExample', ['title' => 'Inicio']);
+        Response::render('pages/indexExample', ['title' => 'Inicio']);
     }
 }
