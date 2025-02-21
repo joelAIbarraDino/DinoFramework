@@ -28,6 +28,7 @@ class Installer{
             'app/Views',
             'app/Views/pages',
             'public',
+            'logs'
         ];
 
         // Crear las carpetas
@@ -52,6 +53,7 @@ class Installer{
             __DIR__ . '/FilesExamples/User.php' => $baseDir . '/app/Models/User.php',
             __DIR__ . '/FilesExamples/HomeController.php' => $baseDir . '/app/Controllers/HomeController.php',
             __DIR__ . '/FilesExamples/indexExample.php' => $baseDir . '/app/Views/pages/indexExample.php',
+            __DIR__ . '/FilesExamples/error.log' => $baseDir . '/logs/error.log',
         ];
 
         foreach ($filesToCopy as $source => $destination) {

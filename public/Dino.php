@@ -60,6 +60,7 @@ class Dino{
     private function setupLogger(): void{
 
         $this->logger = new Logger(self::$APP_NAME);
+        
         Helpers::pathExists(self::$ROOT_DIR .'/logs/');
         
         $logFile = self::$ROOT_DIR .'/logs/error.log';

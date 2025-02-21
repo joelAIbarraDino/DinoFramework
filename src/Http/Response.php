@@ -7,7 +7,7 @@ class Response{
     private static $baseDir;
 
     public function __construct($baseDir){
-        $this->baseDir = $baseDir;
+        self::$baseDir = $baseDir;
     }
 
     public static function json(array $data, int $code = 200):void{
