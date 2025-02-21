@@ -50,7 +50,7 @@ class Request{
 
         $data = [];
         foreach ($_GET as $key => $value) {
-            $data[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            $data[$key] = filter_input(INPUT_GET, $value, FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
         return $data;

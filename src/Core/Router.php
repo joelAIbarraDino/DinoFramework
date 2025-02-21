@@ -78,9 +78,15 @@ class Router{
     private function createMiddlewareStack(array $middlewares, callable $next): callable{
         return array_reduce(
             array_reverse($middlewares),
-            function (callable $stack, string $middleware) {
+            function (callable $stack, $middleware) {
                 return function () use ($middleware, $stack) {
-                    (new $middleware)->handle($stack);
+                    // Si es un string (nombre de la clase), instancia el middleware
+                    if (is_string($middleware)) {
+                        $middleware = new $middleware;
+                    }
+
+                    // Llama al método handle del middleware
+                    $middleware->handle($stack);
                 };
             },
             $next

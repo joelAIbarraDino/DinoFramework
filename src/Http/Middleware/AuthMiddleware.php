@@ -4,17 +4,14 @@ namespace DinoEngine\Middleware;
 
 use DinoEngine\Http\Response;
 
-class AuthMiddleware implements HandleInterface
-{
+class AuthMiddleware implements HandleInterface{
     private string $redirectUrl;
 
-    public function __construct(string $redirectUrl = '/')
-    {
+    public function __construct(string $redirectUrl = '/'){
         $this->redirectUrl = $redirectUrl;
     }
 
-    public function handle(callable $next): void
-    {
+    public function handle(callable $next): void{
         if (!$this->checkAuthentication()) {
             Response::redirect($this->redirectUrl);
             return;
