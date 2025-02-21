@@ -2,8 +2,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Controllers\HomeController;
-
+use App\Controllers\PagesController;
 use DinoEngine\Core\Database;
 use DinoFrame\Dino;
 
@@ -27,6 +26,6 @@ $emailConfig = [
 
 $dino = new Dino("Mi app dinozign", dirname(__DIR__), $dbConfig, Database::PDO_DRIVER, Dino::DEVELOPMENT_MODE, $emailConfig);
 
-$dino->router->get('/', [HomeController::class, 'index']);
+$dino->router->get('/', [PagesController::class, 'index']);
 
 $dino->router->dispatch();
