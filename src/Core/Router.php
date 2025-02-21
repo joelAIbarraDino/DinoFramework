@@ -10,23 +10,23 @@ class Router{
     private array $routes = [];
 
     public function get(string $url, callable $fn, array $middlewares = []): void{
-        $this->addRoute('GET', $url, $fn, $middlewares);
+        $this->addRoute('get', $url, $fn, $middlewares);
     }
 
     public function post(string $url, callable $fn, array $middlewares = []): void{
-        $this->addRoute('POST', $url, $fn, $middlewares);
+        $this->addRoute('post', $url, $fn, $middlewares);
     }
 
     public function put(string $url, callable $fn, array $middlewares = []): void{
-        $this->addRoute('PUT', $url, $fn, $middlewares);
+        $this->addRoute('put', $url, $fn, $middlewares);
     }
 
     public function delete(string $url, callable $fn, array $middlewares = []): void{
-        $this->addRoute('DELETE', $url, $fn, $middlewares);
+        $this->addRoute('delete', $url, $fn, $middlewares);
     }
 
     public function patch(string $url, callable $fn, array $middlewares = []): void{
-        $this->addRoute('PATCH', $url, $fn, $middlewares);
+        $this->addRoute('patch', $url, $fn, $middlewares);
     }
 
     private function addRoute(string $method, string $url, callable $fn, array $middlewares): void{
