@@ -3,28 +3,31 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\PagesController;
-use DinoEngine\Core\Database;
 use DinoFrame\Dino;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
 
 $dbConfig = [
-    "host"=>"127.0.0.1",
-    "port"=>3306,
-    "user"=>"root",
-    "password"=>"",
-    "database"=>"test"
+    "host"=>$_ENV['DB_HOST'],
+    "port"=>$_ENV['DB_PORT'],
+    "user"=>$_ENV['DB_USER'],
+    "password"=>$_ENV['DB_PASS'],
+    "database"=>$_ENV['DB_DATABASE']
 ];
 
 $emailConfig = [
-    "from"=>"miApp@dinozign.com",
-    "to"=>"developer@dinozign.com",
-    "name"=>"developer name",
-    "host"=>"smtp.dinozign.com",
-    "user"=>"miUser@dinozign.com",
-    "password"=>"",
-    "port"=>587
+    "from"=>$_ENV['MAIL_DEBUG_FROM'],
+    "to"=>$_ENV['MAIL_DEBUG_TO'],
+    "name"=>$_ENV['MAIL_DEBUG_NAME'],
+    "host"=>$_ENV['MAIL_DEBUG_HOST'],
+    "user"=>$_ENV['MAIL_DEBUG_USER'],
+    "password"=>$_ENV['MAIL_DEBUG_PASS'],
+    "port"=>$_ENV['MAIL_DEBUG_PORT']
 ];
 
-$dino = new Dino("Mi app dinozign", dirname(__DIR__), $dbConfig, Database::PDO_DRIVER, Dino::DEVELOPMENT_MODE, $emailConfig);
+$dino = new Dino("Mi app dinozign", dirname(__DIR__), Dino::DEVELOPMENT_MODE, $dbConfig, $emailConfig);
 
 $dino->router->get('/', [PagesController::class, 'index']);
 
