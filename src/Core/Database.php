@@ -25,14 +25,14 @@ class Database{
     private string $driver;
     private $connection = null;
 
-    function __construct($config =[], $driver = self::PDO_DRIVER)
+    function __construct($config =[])
     {
         $this->host = $config['host']??'localhost';
         $this->port = $config['port']??3306;
         $this->user = $config['user']??'root';
         $this->password = $config['password']??'';
         $this->database = $config['database']??'test';
-        $this->driver = $driver;
+        $this->driver = $config['driveer']??self::PDO_DRIVER;
         
         $this->connect();
     }

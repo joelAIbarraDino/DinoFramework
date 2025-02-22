@@ -41,7 +41,7 @@ class Dino{
     private ?PHPMailer $mailer;
     private ?array $emailConfig;
 
-    public function __construct(string $nameApp, string $rootDir, array $DBconfig = [], string $DBdriver = Database::PDO_DRIVER, int $mode = self::DEVELOPMENT_MODE, ?array $emailConfig = null){
+    public function __construct(string $nameApp, string $rootDir, ?array $DBconfig = null, int $mode = self::DEVELOPMENT_MODE, ?array $emailConfig = null){
         
         self::$ROOT_DIR = $rootDir;
         self::$APP_NAME = $nameApp;
@@ -54,9 +54,15 @@ class Dino{
         
         $this->setupLogger();
         $this->setupErrorHandling($mode);
-        $this->database = new Database($DBconfig, $DBdriver);
-        
+        $this->setupDatabase($DBconfig);
+
         self::$dino = $this;
+    }
+
+
+    private function setupDatabase($DBconfig):void{
+        if(!is_null($DBconfig))
+            $this->database = new Database($DBconfig);
     }
 
     private function setupLogger(): void{
