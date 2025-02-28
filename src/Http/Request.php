@@ -37,7 +37,16 @@ class Request{
 
         $data = [];
         foreach ($_POST as $key => $value) {
-            $data[$key] = filter_input(INPUT_POST, $value, FILTER_SANITIZE_SPECIAL_CHARS);
+
+            if(is_array($value)){
+                $arrayElements = [];
+
+                foreach($value as $arrayValueElement)
+                    $arrayElements[] = filter_input(INPUT_POST, $arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
+                
+                $data[$key] = $arrayElements;
+            }else
+                $data[$key] = filter_input(INPUT_POST, $value, FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
         return $data;
