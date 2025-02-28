@@ -2,6 +2,8 @@
 
 namespace DinoEngine\Http;
 
+use DinoEngine\Helpers\Helpers;
+
 class Request{
     
     private static array $urlParams = [];
@@ -37,16 +39,15 @@ class Request{
 
         $data = [];
         foreach ($_POST as $key => $value) {
-
             if(is_array($value)){
                 $arrayElements = [];
 
                 foreach($value as $arrayValueElement)
-                    $arrayElements[] = filter_input(INPUT_POST, $arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
-                
+                    $arrayElements[] = filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
+
                 $data[$key] = $arrayElements;
             }else
-                $data[$key] = filter_input(INPUT_POST, $value, FILTER_SANITIZE_SPECIAL_CHARS);
+                $data[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
         return $data;
@@ -58,8 +59,16 @@ class Request{
         }
 
         $data = [];
-        foreach ($_GET as $key => $value) {
-            $data[$key] = filter_input(INPUT_GET, $value, FILTER_SANITIZE_SPECIAL_CHARS);
+        foreach ($_POST as $key => $value) {
+            if(is_array($value)){
+                $arrayElements = [];
+
+                foreach($value as $arrayValueElement)
+                    $arrayElements[] = filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
+
+                $data[$key] = $arrayElements;
+            }else
+                $data[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
         return $data;
