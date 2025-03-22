@@ -11,7 +11,6 @@ use DinoEngine\Http\Request;
 use DinoEngine\Core\Router;
 use DinoEngine\Core\Model;
 
-use InvalidArgumentException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -28,7 +27,6 @@ class Dino{
     public const PRODUCTION_MODE = 2;
 
     public static string $ROOT_DIR;
-    public static string $APP_NAME;
     public static Dino $dino;
 
     public Database $database;
@@ -44,10 +42,10 @@ class Dino{
     public function __construct(string $nameApp, string $rootDir, int $mode = self::DEVELOPMENT_MODE, ?array $DBconfig = null, ?array $emailConfig = null){
         
         self::$ROOT_DIR = $rootDir;
-        self::$APP_NAME = $nameApp;
-        
+        define('NAME_APP',$nameApp);
+
         $this->response = new Response(self::$ROOT_DIR);
-        $this->router = new Router(self::$APP_NAME);
+        $this->router = new Router();
         $this->emailConfig = $emailConfig;
         $this->request = new Request;
         $this->mailer = null;

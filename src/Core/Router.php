@@ -10,11 +10,6 @@ use DinoFrame\Dino;
 class Router{
     
     private array $routes = [];
-    private string $nameApp;
-
-    public function __construct(string $nameApp){
-        $this->nameApp = $nameApp;
-    }
 
     public function get(string $url, callable $fn, array $middlewares = []): void{
         $this->addRoute('get', $url, $fn, $middlewares);
@@ -52,8 +47,6 @@ class Router{
             $pattern = $this->convertRouteToPattern($route);
             if (preg_match($pattern, $url, $matches)) {
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
-                $params["nameApp"] =$this->nameApp;
-
                 Request::setUrlParams($params);
                 // Ejecuta los middlewares antes de llamar al controlador
                 $this->runMiddlewares($config['middlewares'], function () use ($config, $params) {

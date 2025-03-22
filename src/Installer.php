@@ -26,7 +26,7 @@ class Installer{
             'app/Controllers',
             'app/Models',
             'app/Views',
-            'app/Views/pages',
+            'app/Views/public',
             'public',
             'logs'
         ];
@@ -51,8 +51,8 @@ class Installer{
             __DIR__ . '/FilesExamples/.env.example' => $baseDir . '/public/.env',
             __DIR__ . '/FilesExamples/index.php' => $baseDir . '/public/index.php',
             __DIR__ . '/FilesExamples/User.php' => $baseDir . '/app/Models/User.php',
-            __DIR__ . '/FilesExamples/PagesController.php' => $baseDir . '/app/Controllers/PagesController.php',
-            __DIR__ . '/FilesExamples/indexExample.php' => $baseDir . '/app/Views/pages/indexExample.php',
+            __DIR__ . '/FilesExamples/PublicController.php' => $baseDir . '/app/Controllers/PublicController.php',
+            __DIR__ . '/FilesExamples/indexExample.php' => $baseDir . '/app/Views/public/index.php',
             __DIR__ . '/FilesExamples/master.php' => $baseDir . '/app/Views/master.php',
             __DIR__ . '/FilesExamples/error.log' => $baseDir . '/logs/error.log',
         ];

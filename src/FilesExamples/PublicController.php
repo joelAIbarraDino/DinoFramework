@@ -4,11 +4,10 @@ namespace App\Controllers;
 
 use DinoEngine\Http\Response;
 
-class PagesController
+class PublicController
 {
-    public static function index(string $nameApp): void{
+    public static function index(): void{
         Response::render('pages/indexExample', [
-            'nameApp'=>$nameApp, 
             'title' => 'Inicio'
         ]);
     }
