@@ -8,6 +8,7 @@ use DinoEngine\Exceptions\DatabaseConnectionException;
 use DinoEngine\Exceptions\MassAssignmentException;
 use DinoEngine\Exceptions\QueryException;
 use DinoEngine\Core\Database;
+use DinoEngine\Helpers\Helpers;
 use InvalidArgumentException;
 use RuntimeException;
 use PDOException;
@@ -66,8 +67,11 @@ class Model{
 
     //query methods
     
-    public static function find(int $id):static{
-        
+    public static function find(int $id):static|null{
+
+        if($id < 0)
+            throw new InvalidArgumentException("id must be positive");
+
         $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
@@ -78,13 +82,13 @@ class Model{
         $stmt = self::executeSQL($query, [':id'=>$id]);
         $results = self::DatabaseResultToObjects($stmt);
         
-        return array_shift($results);
+        return empty($results)?null:array_shift($results);
     }
 
     public static function all(int $limit = 0):array{
 
         if($limit < 0)
-            throw new InvalidArgumentException("The param limit must be positive");
+            throw new InvalidArgumentException("limit must be positive");
 
         $columns = array_diff(static::$columns, static::$hidden);
 
