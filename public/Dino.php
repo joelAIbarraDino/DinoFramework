@@ -4,7 +4,6 @@ namespace DinoFrame;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use DinoEngine\Helpers\Helpers;
 use DinoEngine\Core\Database;
 use DinoEngine\Http\Response;
 use DinoEngine\Http\Request;
@@ -60,15 +59,16 @@ class Dino{
 
 
     private function setupDatabase($DBconfig):void{
-        if(!is_null($DBconfig))
+        if(!is_null($DBconfig)){
             $this->database = new Database($DBconfig);
+            $this->model = new Model;
+            $this->model->setDB($this->database);
+        }
     }
 
     private function setupLogger(): void{
 
         $this->logger = new Logger(self::$APP_NAME);
-        
-        Helpers::pathExists(self::$ROOT_DIR .'/logs/');
         
         $logFile = self::$ROOT_DIR .'/logs/error.log';
         $this->logger->pushHandler(new StreamHandler($logFile, Logger::ERROR));

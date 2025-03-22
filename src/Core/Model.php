@@ -8,7 +8,6 @@ use DinoEngine\Exceptions\DatabaseConnectionException;
 use DinoEngine\Exceptions\MassAssignmentException;
 use DinoEngine\Exceptions\QueryException;
 use DinoEngine\Core\Database;
-
 use InvalidArgumentException;
 use RuntimeException;
 use PDOException;
@@ -18,7 +17,7 @@ use PDOStatement;
 
 use PDO;
 
-abstract class Model{
+class Model{
 
     //database attributes 
     protected static $db;
@@ -44,15 +43,8 @@ abstract class Model{
      * @param mixed $db database instance
      */
     public static function setDB($db):void{
-        self::$db = $db;
-    }
-
-    /**
-     * set the driver in the model
-     * @param string $driver driver selected
-     */
-    public static function setDriver(string $driver):void{
-        self::$driver = $driver;
+        self::$db = $db->getConnection();
+        self::$driver = $db->getDriver();
     }
 
     /**
@@ -245,7 +237,7 @@ abstract class Model{
         return $attributes;   
     }
 
-    private function DatabaseResultToObjects($DatabaseResult):array{
+    private static function DatabaseResultToObjects($DatabaseResult):array{
         switch(self::$driver){
             case Database::MYSQLI_DRIVER:
                 $array = Database::mysqliResultToArray($DatabaseResult);
@@ -261,13 +253,13 @@ abstract class Model{
         }
     }
 
-    private function arrayToArrayObject(array $arrays):array{
-        $arrays = [];
+    private static function arrayToArrayObject(array $arrays):array{
+        $arraysObject = [];
         
         foreach($arrays as $array)
-            $array[] = static::newObject($array); 
+            $arraysObject[] = static::newObject($array); 
         
-        return $arrays;
+        return $arraysObject;
     }
 
     /**
@@ -338,22 +330,22 @@ abstract class Model{
      * @return mysqli_result mysqli result
      */
     private static function executeMysqliQuery(string $sql, array $params): mysqli_result {
-        $stmt = self::$db->getConnection()->prepare($sql);
-    
+        $stmt = self::$db->prepare($sql);
         if (!$stmt) {
             throw new QueryException("Prepare failed: " . self::$db->getConnection()->error, -2);
         }
-    
+        
         if (!empty($params)) {
             $types = Database::determinateTypes($params);
             $stmt->bind_param($types, ...$params);
         }
-    
+        
         if (!$stmt->execute()) {
             throw new QueryException("Execute failed: " . $stmt->error, -4);
         }
     
         $result = $stmt->get_result();
+
         if (!$result) {
             throw new QueryException("Get result failed: " . $stmt->error, -5);
         }
@@ -369,7 +361,7 @@ abstract class Model{
      */
     private static function executePDOQuery(string $sql, array $params): PDOStatement {
         try {
-            $stmt = self::$db->getConnection()->prepare($sql);
+            $stmt = self::$db->prepare($sql);
     
             if (!$stmt) {
                 throw new QueryException("Prepare failed: " . implode(", ", self::$db->getConnection()->errorInfo()), -2);
