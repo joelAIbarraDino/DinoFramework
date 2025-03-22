@@ -82,6 +82,10 @@ class Model{
     }
 
     public static function all(int $limit = 0):array{
+
+        if($limit < 0)
+            throw new InvalidArgumentException("The param limit must be positive");
+
         $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
