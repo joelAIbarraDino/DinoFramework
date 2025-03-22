@@ -28,11 +28,11 @@ class Database{
     function __construct($config =[])
     {
         $this->host = $config['host']??'localhost';
-        $this->port = $config['port']??3306;
+        $this->port = (int)$config['port']??3306;
         $this->user = $config['user']??'root';
         $this->password = $config['password']??'';
         $this->database = $config['database']??'test';
-        $this->driver = $config['driveer']??self::PDO_DRIVER;
+        $this->driver = $config['driver']??self::PDO_DRIVER;
         
         $this->connect();
     }

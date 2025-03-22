@@ -3,6 +3,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\PublicController;
+use DinoEngine\Core\Database;
 use DinoFrame\Dino;
 use Dotenv\Dotenv;
 
@@ -14,7 +15,8 @@ $dbConfig = [
     "port"=>$_ENV['DB_PORT'],
     "user"=>$_ENV['DB_USER'],
     "password"=>$_ENV['DB_PASS'],
-    "database"=>$_ENV['DB_DATABASE']
+    "database"=>$_ENV['DB_DATABASE'],
+    "driver"=>Database::PDO_DRIVER
 ];
 
 $emailConfig = [
