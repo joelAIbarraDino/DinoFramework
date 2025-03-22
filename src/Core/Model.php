@@ -8,7 +8,6 @@ use DinoEngine\Exceptions\DatabaseConnectionException;
 use DinoEngine\Exceptions\MassAssignmentException;
 use DinoEngine\Exceptions\QueryException;
 use DinoEngine\Core\Database;
-use DinoEngine\Helpers\Helpers;
 use InvalidArgumentException;
 use RuntimeException;
 use PDOException;
@@ -67,6 +66,7 @@ class Model{
 
     //query methods
     
+    //ok
     public static function find(int $id):static|null{
 
         if($id < 0)
@@ -84,7 +84,8 @@ class Model{
         
         return empty($results)?null:array_shift($results);
     }
-
+    
+    //ok
     public static function all(int $limit = 0):array{
 
         if($limit < 0)
@@ -117,7 +118,8 @@ class Model{
         return $results;
     }
 
-    public static function where(string $column, string $operator, string $value):static{
+    //ok
+    public static function where(string $column, string $operator, ?string $value):static|null{
         
         self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE']);
         self::validateColumn($column);
@@ -132,10 +134,11 @@ class Model{
         $stmt = self::executeSQL($query, [':value'=>$value]);
         $results = self::DatabaseResultToObjects($stmt);
         
-        return array_shift($results);
+        return empty($results)?null:array_shift($results);
     }
 
-    public static function multiWhere(array $data, array $operators = ["AND"]):static{
+    //ok
+    public static function multiWhere(array $data, array $operators = ["AND"]):static|null{
         
         if (count($operators) != count($data) - 1)
             throw new InvalidArgumentException("The number of operators must be one less than the number of conditions.");
@@ -158,7 +161,7 @@ class Model{
         $stmt = self::executeSQL($query, $params);
         $results = self::DatabaseResultToObjects($stmt);
         
-        return array_shift($results);
+        return empty($results)?null:array_shift($results);
     }
 
     public function save():void{
@@ -320,7 +323,7 @@ class Model{
     private static function executeSQL(string $sql, array $params = []):mixed{
         switch(self::$driver){
             case Database::MYSQLI_DRIVER:
-                return self::executeMysqliQuery($sql, $params);
+                return self::executeMysqliQuery(self::prepareSentenceMySQL($sql), array_values($params));
             break;
             
             case Database::PDO_DRIVER:
@@ -340,7 +343,7 @@ class Model{
     private static function executeMysqliQuery(string $sql, array $params): mysqli_result {
         $stmt = self::$db->prepare($sql);
         if (!$stmt) {
-            throw new QueryException("Prepare failed: " . self::$db->getConnection()->error, -2);
+            throw new QueryException("Prepare failed: " . self::$db->error, -2);
         }
         
         if (!empty($params)) {
@@ -372,7 +375,7 @@ class Model{
             $stmt = self::$db->prepare($sql);
     
             if (!$stmt) {
-                throw new QueryException("Prepare failed: " . implode(", ", self::$db->getConnection()->errorInfo()), -2);
+                throw new QueryException("Prepare failed: " . implode(", ", self::$db->errorInfo()), -2);
             }
     
             $stmt->execute($params);
@@ -382,6 +385,10 @@ class Model{
         }
     }
     
+    private static function prepareSentenceMySQL(string $sql):string{
+            return preg_replace('/:\w+/', '?', $sql);
+    }
+
     private static function createParams($array):array{
         $params = [];
 
