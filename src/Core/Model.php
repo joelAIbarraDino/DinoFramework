@@ -104,7 +104,7 @@ class Model{
         return $results;
     }
 
-    public static function belongsTo(string $column, string $value):array{
+    public static function belongsTo(string $column, string $value):array|null{
         $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
@@ -115,7 +115,7 @@ class Model{
         $stmt = self::executeSQL($query, [':value'=>$value]);
         $results = self::DatabaseResultToObjects($stmt);
         
-        return $results;
+        return empty($results)?null:$results;
     }
 
     //ok
@@ -123,6 +123,7 @@ class Model{
         
         self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE']);
         self::validateColumn($column);
+        self::validateValue($column, $value);
 
         $columns = array_diff(static::$columns, static::$hidden);
 
@@ -142,7 +143,8 @@ class Model{
         
         if (count($operators) != count($data) - 1)
             throw new InvalidArgumentException("The number of operators must be one less than the number of conditions.");
-        
+
+        self::validateValues($data);        
         self::validateOperators($operators, ['AND', 'OR']);
         self::validateColumns($data);
 
@@ -164,6 +166,52 @@ class Model{
         return empty($results)?null:array_shift($results);
     }
 
+    //ok
+    public static function nullValue(string $column, bool $isNull = true):array|null{
+
+        self::validateColumn($column);
+
+        $columns = array_diff(static::$columns, static::$hidden);
+        
+        $conditionNull = $isNull?'IS NULL':'IS NOT NULL';
+        $whereClause = "WHERE $column $conditionNull";
+
+        $query = "SELECT ";
+        $query .= implode(', ', $columns);
+        $query .= " FROM ". static::$table;
+        $query .= " ".$whereClause;
+    
+        $stmt = self::executeSQL($query);
+        $results = self::DatabaseResultToObjects($stmt);
+        
+        return empty($results)?null:$results;
+    }
+
+    public static function nullValues(array $nullColumns, array $operators = ['AND'], bool $isNull = true):array|null{
+
+        if (count($operators) != count($nullColumns) - 1)
+            throw new InvalidArgumentException("The number of operators must be one less than the number of conditions.");
+        
+        self::validateOperators($operators, ['AND', 'OR']);
+        self::validateColumns($nullColumns);
+
+        $columns = array_diff(static::$columns, static::$hidden);
+        
+        $conditionNull = $isNull?'IS NULL':'IS NOT NULL';
+        $conditions = array_map(fn($col, $condition) => "$col $condition", $nullColumns, $conditionNull);
+        $whereClause = "WHERE " . implode(" ", array_map(fn($cond, $op) => "$cond $op", $conditions, $operators));
+
+        $query = "SELECT ";
+        $query .= implode(', ', $columns);
+        $query .= " FROM ". static::$table;
+        $query .= " ".$whereClause;
+    
+        $stmt = self::executeSQL($query);
+        $results = self::DatabaseResultToObjects($stmt);
+        
+        return empty($results)?null:$results;
+    }
+
     public function save():void{
         
         $columnName = static::$PK_name;
@@ -174,7 +222,7 @@ class Model{
             $this->update();
     }
 
-    public function create():?int{
+    private function create():?int{
         $attributes = $this->attributesTableMatch();
 
         self::validateColumns(array_keys($attributes));
@@ -193,7 +241,7 @@ class Model{
         return $id?(int)$id:null;
     }
 
-    public function update():int{
+    private function update():int{
         $attributes = $this->attributesTableMatch();
         $idName = static::$PK_name;
 
@@ -427,6 +475,16 @@ class Model{
         foreach($columns as $column=>$value)
             self::validateColumn($column);
 
+    }
+
+    private static function validateValue(string $column, mixed $value):void{
+        if(is_null($value))
+            throw new InvalidArgumentException("column '$column' does not allow evalue null values, use nullValues() method");
+    }
+
+    private static function validateValues(array $arrayData):void{
+        foreach($arrayData as $column=>$data)
+            self::validateValue($column, $data);
     }
 
 }
