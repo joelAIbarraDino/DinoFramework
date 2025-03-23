@@ -33,7 +33,7 @@ class Model{
 
     //Model attributes
     protected static array $fillable = [];
-    protected static array $hidden = [];
+    private static array $hidden = [];
     protected static array $selectColumns = [];
     protected static array $nulleable = [];
     
@@ -167,6 +167,7 @@ class Model{
         return empty($results)?null:array_shift($results);
     }
 
+    //ok
     public static function nullValue(string $column, bool $isNull = true):array|null{
 
         self::validateColumn($column);
@@ -187,6 +188,7 @@ class Model{
         return empty($results)?null:$results;
     }
 
+    //ok
     public static function nullValues(array $nullColumns, array $operators = ['AND'], bool $isNull = true):array|null{
 
         if (count($operators) != count($nullColumns) - 1)
