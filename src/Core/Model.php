@@ -8,6 +8,7 @@ use DinoEngine\Exceptions\DatabaseConnectionException;
 use DinoEngine\Exceptions\MassAssignmentException;
 use DinoEngine\Exceptions\QueryException;
 use DinoEngine\Core\Database;
+use DinoEngine\Helpers\Helpers;
 use InvalidArgumentException;
 use RuntimeException;
 use PDOException;
@@ -54,7 +55,7 @@ class Model{
      * @param string $message a message to alert the user
      */
     public static function setAlerts(string $type, string $message):void{
-        self::$alertas[$type][] = $message;
+        self::$alerts[$type][] = $message;
     }
 
     /**
@@ -62,7 +63,7 @@ class Model{
      * @return array array of alerts
      */
     public static function getAlerts():array{
-        return self::$alertas;
+        return self::$alerts;
     }
 
     //query methods
@@ -105,6 +106,7 @@ class Model{
         return $results;
     }
 
+    //ok
     public static function belongsTo(string $column, string $value):array|null{
         $columns = array_diff(static::$columns, static::$selectColumns);
 
@@ -214,16 +216,18 @@ class Model{
         return empty($results)?null:$results;
     }
 
-    public function save():void{
+    //ok
+    public function save():?int{
         
         $columnName = static::$PK_name;
 
         if(is_null($this->$columnName))
-            $this->create();
+            return $this->create();
         else
-            $this->update();
+            return $this->update();
     }
-
+    
+    //ok
     private function create():?int{
         $attributes = $this->attributesTableMatch();
 
@@ -243,6 +247,7 @@ class Model{
         return $id?(int)$id:null;
     }
 
+    //ok
     private function update():int{
         $attributes = $this->attributesTableMatch();
         $idName = static::$PK_name;
@@ -262,6 +267,7 @@ class Model{
         return self::$driver === Database::MYSQLI_DRIVER?$stmt->affected_rows:$stmt->rowCount();
     }
 
+    //ok
     public function delete():int{
 
         $idName = static::$PK_name;
@@ -352,7 +358,7 @@ class Model{
             if(!property_exists($this, $key))
                 throw new MassAssignmentException("Property $key does not exists", -2);
 
-            if(!array_key_exists($key, static::$fillable))
+            if(!in_array($key, static::$fillable))
                 throw new MassAssignmentException("Property $key is not fillable", -3);
 
             if(is_null($value) && !in_array($key, static::$nulleable))
@@ -390,28 +396,30 @@ class Model{
      * @param array $params query params
      * @return mysqli_result mysqli result
      */
-    private static function executeMysqliQuery(string $sql, array $params): mysqli_result {
+    private static function executeMysqliQuery(string $sql, array $params): mixed {
         $stmt = self::$db->prepare($sql);
-        if (!$stmt) {
+        
+        if (!$stmt)
             throw new QueryException("Prepare failed: " . self::$db->error, -2);
-        }
         
         if (!empty($params)) {
             $types = Database::determinateTypes($params);
             $stmt->bind_param($types, ...$params);
         }
         
-        if (!$stmt->execute()) {
+        if (!$stmt->execute())
             throw new QueryException("Execute failed: " . $stmt->error, -4);
-        }
-    
-        $result = $stmt->get_result();
+        
+        if(stripos($sql, 'SELECT') === 0){
+            $result = $stmt->get_result();
 
-        if (!$result) {
-            throw new QueryException("Get result failed: " . $stmt->error, -5);
+            if (!$result) 
+                throw new QueryException("Get result failed: " . $stmt->error, -5);
+            
+            return $result;
+        }else{
+            return $stmt;
         }
-    
-        return $result;
     }
 
     /**
