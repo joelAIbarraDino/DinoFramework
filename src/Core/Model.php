@@ -74,10 +74,8 @@ class Model{
         if($id < 0)
             throw new InvalidArgumentException("id must be positive");
 
-        $columns = array_diff(static::$columns, static::$selectColumns);
-
         $query = "SELECT ";
-        $query .= implode(', ', $columns);
+        $query .= implode(', ', static::$columns);
         $query .= " FROM ". static::$table;
         $query .= " WHERE ". static::$PK_name ." = :id";
 
@@ -93,7 +91,7 @@ class Model{
         if($limit < 0)
             throw new InvalidArgumentException("limit must be positive");
 
-        $columns = array_diff(static::$columns, static::$selectColumns);
+        $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
         $query .= implode(', ', $columns);
@@ -108,7 +106,7 @@ class Model{
 
     //ok
     public static function belongsTo(string $column, string $value):array|null{
-        $columns = array_diff(static::$columns, static::$selectColumns);
+        $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
         $query .= implode(', ', $columns);
@@ -128,7 +126,7 @@ class Model{
         self::validateColumn($column);
         self::validateValue($column, $value);
 
-        $columns = array_diff(static::$columns, static::$selectColumns);
+        $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
         $query .= implode(', ', $columns);
@@ -151,7 +149,7 @@ class Model{
         self::validateOperators($operators, ['AND', 'OR']);
         self::validateColumns($data);
 
-        $columns = array_diff(static::$columns, static::$selectColumns);
+        $columns = array_diff(static::$columns, static::$hidden);
         
         $conditions = array_map(fn($col) => "$col = :$col", array_keys($data));
         $whereClause = "WHERE " . implode(" ", array_map(fn($cond, $op) => "$cond $op", $conditions, $operators));
@@ -174,7 +172,7 @@ class Model{
 
         self::validateColumn($column);
 
-        $columns = array_diff(static::$columns, static::$selectColumns);
+        $columns = array_diff(static::$columns, static::$hidden);
         
         $conditionNull = $isNull?'IS NULL':'IS NOT NULL';
         $whereClause = "WHERE $column $conditionNull";
@@ -199,7 +197,7 @@ class Model{
         self::validateOperators($operators, ['AND', 'OR']);
         self::validateColumns($nullColumns);
 
-        $columns = array_diff(static::$columns, static::$selectColumns);
+        $columns = array_diff(static::$columns, static::$hidden);
         
         $conditionNull = $isNull ? 'IS NULL' : 'IS NOT NULL';
         $conditions = array_map(fn($nullColumn) => "$nullColumn $conditionNull", $nullColumns);
