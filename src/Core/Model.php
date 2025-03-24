@@ -35,7 +35,6 @@ class Model{
     //Model attributes
     protected static array $fillable = [];
     private static array $hidden = [];
-    protected static array $selectColumns = [];
     protected static array $nulleable = [];
     
     //alerts methods
