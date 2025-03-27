@@ -66,7 +66,7 @@ class Dino{
 
     private function setupLogger(): void{
 
-        $this->logger = new Logger(self::$APP_NAME);
+        $this->logger = new Logger("app");
         
         $logFile = self::$ROOT_DIR .'/logs/error.log';
         $this->logger->pushHandler(new StreamHandler($logFile, Logger::ERROR));
@@ -108,9 +108,9 @@ class Dino{
 
 
         try{
-            $this->mailer->setFrom($this->emailConfig['from'], self::$APP_NAME);
+            $this->mailer->setFrom($this->emailConfig['from'], "app");
             $this->mailer->addAddress($this->emailConfig['to'], $this->emailConfig['name']);
-            $this->mailer->Subject = 'Error en la aplicación '.self::$APP_NAME;
+            $this->mailer->Subject = 'Error en la aplicación ';
             $this->mailer->Body = sprintf(
                 "Ha ocurrido un error en la aplicación:\n\nMensaje: %s\n\nTraza:\n%s",
                 $error->getMessage(),
