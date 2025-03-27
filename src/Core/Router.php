@@ -52,7 +52,9 @@ class Router{
             $pattern = $this->convertRouteToPattern($route);
             if (preg_match($pattern, $url, $matches)) {
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
-                $params["nameApp"] =$this->nameApp;
+
+                if(Request::isGET())
+                    $params["nameApp"] =$this->nameApp;
 
                 Request::setUrlParams($params);
                 // Ejecuta los middlewares antes de llamar al controlador
