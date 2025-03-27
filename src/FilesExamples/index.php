@@ -10,6 +10,9 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 
+date_default_timezone_set('America/Mexico_City');
+define('APP_NAME', 'Mi app dinozign');
+
 $dbConfig = [
     "host"=>$_ENV['DB_HOST'],
     "port"=>$_ENV['DB_PORT'],
@@ -29,7 +32,7 @@ $emailConfig = [
     "port"=>$_ENV['MAIL_DEBUG_PORT']
 ];
 
-$dino = new Dino("Mi app dinozign", dirname(__DIR__), Dino::DEVELOPMENT_MODE, $dbConfig, $emailConfig);
+$dino = new Dino(dirname(__DIR__), Dino::DEVELOPMENT_MODE, $dbConfig, $emailConfig);
 
 $dino->router->get('/', [PublicController::class, 'index']);
 

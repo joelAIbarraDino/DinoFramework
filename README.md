@@ -140,14 +140,13 @@ la variable `$content` es donde se inyectara el contenido que tendra la vista, p
 las variables `$nameApp` y `$title` pueden variar cuando se llama a la vista desde el controlador.
 
 ```php
-public static function index(string $nameApp): void{
+public static function index(): void{
     Response::render('public/index', [
-        'nameApp'=>$nameApp, 
+        'nameApp'=>APP_NAME, 
         'title' => 'Inicio'
     ]);
 }
 ```
-el argumento que se pasa a la funcion index `$nameApp` es configurada en el archivo index que esta dentro de la carpeta `public` y siempre debe estar incluida
 
 ### View/index.php
 
@@ -167,6 +166,8 @@ Este archivo registra los errores que pueden llegar a suceder al momento de desa
 Este es el archivo principal del proyecto, donde se configurar las variables de entorno de la base de datos, credenciales para enviar correos de errores de ejecución al momento de pasar la aplicación en modo de producción, la carga del archivo autoload, la configuración del modo de ejecución para el manejo de errores y las rutas del proyecto, por defecto esta registrada una ruta, la de inicio y usa el controlador que esta definido por defecto
 
 ```php
+<?php
+
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\PublicController;
@@ -176,6 +177,9 @@ use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
+
+date_default_timezone_set('America/Mexico_City');
+define('APP_NAME', 'Mi app dinozign');
 
 $dbConfig = [
     "host"=>$_ENV['DB_HOST'],
@@ -196,7 +200,7 @@ $emailConfig = [
     "port"=>$_ENV['MAIL_DEBUG_PORT']
 ];
 
-$dino = new Dino("Mi app dinozign", dirname(__DIR__), Dino::DEVELOPMENT_MODE, $dbConfig, $emailConfig);
+$dino = new Dino(dirname(__DIR__), Dino::DEVELOPMENT_MODE, $dbConfig, $emailConfig);
 
 $dino->router->get('/', [PublicController::class, 'index']);
 
