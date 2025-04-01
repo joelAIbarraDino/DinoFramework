@@ -361,10 +361,58 @@ class Model{
             if(is_null($value) && !in_array($key, static::$nulleable))
                 throw new MassAssignmentException("Property $key does not allow null values", -4);
 
-            $this->$key = $value;
+            $type = $this->determinateType($value);
+
+            switch($type){
+                case 'boolean':
+                    $this->$key = boolvar($value);
+                    break;
+
+                case 'integer':
+                    $this->$key = intval($value);
+                    break;
+                
+                case 'float':
+                    $this->$key = floatval($value);
+                    break;
+
+                default:
+                    $this->$key = strval($value);
+                    break;
+            }
+            
+            
         }
     }
 
+    function determinateType($input) {
+        // Verificar booleano
+        $boolValues = ['true', 'false', '1', '0', 'on', 'off', 'yes', 'no'];
+        if (in_array(strtolower($input), $boolValues)) {
+            return 'boolean';
+        }
+        
+        // Verificar entero
+        if (filter_var($input, FILTER_VALIDATE_INT) !== false) {
+            return 'integer';
+        }
+        
+        // Verificar float
+        if (filter_var($input, FILTER_VALIDATE_FLOAT) !== false) {
+            // Asegurarnos que no es un entero
+            if (strpos($input, '.') !== false || stripos($input, 'e') !== false) {
+                return 'float';
+            }
+        }
+        
+        // Si es numérico pero no entero ni float (como "123abc")
+        if (is_numeric($input)) {
+            return 'numeric string';
+        }
+        
+        // Default: texto
+        return 'text';
+    }
     //SQL execution methods
 
     /**
