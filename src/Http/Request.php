@@ -43,11 +43,11 @@ class Request{
                 $arrayElements = [];
 
                 foreach($value as $arrayValueElement)
-                    $arrayElements[] = filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
+                    $arrayElements[] = Helpers::parseTypes(filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS));
 
                 $data[$key] = $arrayElements;
             }else
-                $data[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+                $data[$key] = Helpers::parseTypes(filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS));
         }
 
         return $data;
@@ -64,11 +64,11 @@ class Request{
                 $arrayElements = [];
 
                 foreach($value as $arrayValueElement)
-                    $arrayElements[] = filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
+                    $arrayElements[] = Helpers::parseTypes(filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS));
 
                 $data[$key] = $arrayElements;
             }else
-                $data[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+                $data[$key] = Helpers::parseTypes(filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS));
         }
 
         return $data;
