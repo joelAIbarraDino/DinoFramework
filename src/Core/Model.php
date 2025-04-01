@@ -17,6 +17,7 @@ use mysqli_result;
 use PDOStatement;
 
 use PDO;
+use TypeError;
 
 class Model{
 
@@ -53,8 +54,8 @@ class Model{
      * @param string $type a message type **error**, **warning** or **success**
      * @param string $message a message to alert the user
      */
-    public static function setAlerts(string $type, string $message):void{
-        self::$alerts[$type][] = $message;
+    public static function setAlerts(string $attribute, string $message):void{
+        self::$alerts[$attribute] = $message;
     }
 
     /**
@@ -353,16 +354,19 @@ class Model{
 
         foreach($args as $key=>$value){
             if(!property_exists($this, $key))
-                throw new MassAssignmentException("Property $key does not exists", -2);
+                throw new MassAssignmentException("Attribute $key does not exists", -2);
 
             if(!in_array($key, static::$fillable))
-                throw new MassAssignmentException("Property $key is not fillable", -3);
+                throw new MassAssignmentException("Attribute $key is not fillable", -3);
 
             if(is_null($value) && !in_array($key, static::$nulleable))
-                throw new MassAssignmentException("Property $key does not allow null values", -4);
+                throw new MassAssignmentException("Attribute $key does not allow null values", -4);
 
-            
-            $this->$key = $value;
+            try{
+                $this->$key = $value;
+            }catch(TypeError){
+                throw new MassAssignmentException("Attribute $key expect a value type ". gettype($key), -4);
+            }
 
         }
     }

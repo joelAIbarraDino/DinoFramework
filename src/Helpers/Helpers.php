@@ -2,7 +2,11 @@
 
 namespace DinoEngine\Helpers;
 
+use ReflectionClass;
+use ReflectionException;
+use ReflectionNamedType;
 use Symfony\Component\Filesystem\Filesystem;
+use TypeError;
 
 class Helpers{
 
@@ -19,11 +23,15 @@ class Helpers{
         exit;
     }
 
-    static function parseTypes($input):mixed {
+    static function parseVal($input):mixed {
+
+        if( strlen($input) === 0)
+            return null;
+
         // Verificar booleano
         $boolValues = ['true', 'false' ,'on', 'off', 'yes', 'no'];
         if (in_array(strtolower($input), $boolValues)) {
-            return filter_var($input, FILTER_VALIDATE_BOOLEAN);;
+            return filter_var($input, FILTER_VALIDATE_BOOLEAN);
         }
         
         // Verificar entero
