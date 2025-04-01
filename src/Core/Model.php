@@ -365,7 +365,7 @@ class Model{
 
             switch($type){
                 case 'boolean':
-                    $this->$key = boolvar($value);
+                    $this->$key = boolval($value);
                     break;
 
                 case 'integer':
@@ -387,7 +387,7 @@ class Model{
 
     function determinateType($input) {
         // Verificar booleano
-        $boolValues = ['true', 'false', '1', '0', 'on', 'off', 'yes', 'no'];
+        $boolValues = ['true', 'false' ,'on', 'off', 'yes', 'no'];
         if (in_array(strtolower($input), $boolValues)) {
             return 'boolean';
         }
