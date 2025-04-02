@@ -28,6 +28,11 @@ class Helpers{
         if( strlen($input) === 0)
             return null;
 
+        //verificar si es null
+        $nullValues = ['null', 'NULL', ''];
+        if(in_array(strtolower($input), $nullValues))
+            return null;
+
         // Verificar booleano
         $boolValues = ['true', 'false' ,'on', 'off', 'yes', 'no'];
         if (in_array(strtolower($input), $boolValues)) {

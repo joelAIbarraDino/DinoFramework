@@ -17,6 +17,7 @@ use mysqli_result;
 use PDOStatement;
 
 use PDO;
+use Symfony\Component\Console\Helper\Helper;
 use TypeError;
 
 class Model{
@@ -122,7 +123,7 @@ class Model{
     //ok
     public static function where(string $column, string $operator, ?string $value):static|null{
         
-        self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE']);
+        self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE', 'like']);
         self::validateColumn($column);
         self::validateValue($column, $value);
 
@@ -131,7 +132,7 @@ class Model{
         $query = "SELECT ";
         $query .= implode(', ', $columns);
         $query .= " FROM ". static::$table;
-        $query .= " WHERE ".$column.$operator.":value";
+        $query .= " WHERE ".$column.$operator." :value";
 
         $stmt = self::executeSQL($query, [':value'=>$value]);
         $results = self::DatabaseResultToObjects($stmt);
