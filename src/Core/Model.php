@@ -132,7 +132,7 @@ class Model{
         $query = "SELECT ";
         $query .= implode(', ', $columns);
         $query .= " FROM ". static::$table;
-        $query .= " WHERE ".$column.$operator." :value";
+        $query .= " WHERE ".$column." ".$operator." :value";
 
         $stmt = self::executeSQL($query, [':value'=>$value]);
         $results = self::DatabaseResultToObjects($stmt);
