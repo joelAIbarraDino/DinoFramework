@@ -37,5 +37,9 @@ class Storage{
         return md5( uniqid( (string)rand(), true ) ) .$extension;
     }
 
+    public static function validateFormat(string $type, array $validFormats):bool{
+        return in_array($type, $validFormats);
+    }
+
 }
 
