@@ -5,7 +5,8 @@
 $autoloadPaths = [
     __DIR__.'/../../autoload.php',  // Para desarrollo local
     __DIR__.'/../vendor/autoload.php',  // Cuando se instala como dependencia
-    __DIR__.'/vendor/autoload.php'  // Cuando se instala globalmente
+    __DIR__.'/vendor/autoload.php',  // Cuando se instala globalmente
+    __DIR__.'/../autoload.php'
 ];
 
 foreach ($autoloadPaths as $path) {
