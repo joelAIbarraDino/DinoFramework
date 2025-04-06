@@ -3,7 +3,6 @@
     "description": "Framework chido para aplicaciones web chidas",
     "type": "library",
     "license": "MIT",
-    "bin": ["bin/dino-install"],
     "authors": [
         {
             "name": "Joel Alejandro Ibarra Villar",
