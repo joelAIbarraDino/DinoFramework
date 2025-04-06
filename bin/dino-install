@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+namespace DinoSrcipts;
+
 use DinoEngine\Installer;
 
 // Ejecuta el instalador manualmente

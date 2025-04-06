@@ -13,7 +13,8 @@
     "autoload": {
         "psr-4": {
             "DinoEngine\\":"src/",
-            "DinoFrame\\":"public/"
+            "DinoFrame\\":"public/",
+            "DinoSrcipts\\":"bin/"
         }
     },
     "require": {
