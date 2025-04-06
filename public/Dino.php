@@ -2,8 +2,6 @@
 
 namespace DinoFrame;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 use DinoEngine\Core\Database;
 use DinoEngine\Http\Response;
 use DinoEngine\Http\Request;

@@ -1,7 +1,6 @@
 {
     "name": "dinozign/dino-framework",
     "description": "Framework chido para aplicaciones web chidas",
-    "version":"1.0.5",
     "type": "library",
     "license": "MIT",
     "bin": ["bin/dino-install"],
@@ -13,8 +12,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "DinoEngine\\":"./src",
-            "DinoFrame\\":"./public"
+            "DinoEngine\\":"src/",
+            "DinoFrame\\":"public/"
         }
     },
     "require": {
