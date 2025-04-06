@@ -3,6 +3,8 @@
 
 namespace DinoSrcipts;
 
+include_once __DIR__."./../vendor/autoload.php";
+
 use DinoEngine\Installer;
 
 // Ejecuta el instalador manualmente
