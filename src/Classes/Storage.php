@@ -33,5 +33,9 @@ class Storage{
         return true;
     }
 
+    public static function uniqName(string $extension):string{
+        return md5( uniqid( (string)rand(), true ) ) .$extension;
+    }
+
 }
 
