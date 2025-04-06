@@ -1,11 +1,20 @@
 #!/usr/bin/env php
 <?php
 
-namespace DinoSrcipts;
+// Intentar cargar el autoloader desde diferentes ubicaciones
+$autoloadPaths = [
+    __DIR__.'/../../autoload.php',  // Para desarrollo local
+    __DIR__.'/../vendor/autoload.php',  // Cuando se instala como dependencia
+    __DIR__.'/vendor/autoload.php'  // Cuando se instala globalmente
+];
 
-include_once __DIR__."./../vendor/autoload.php";
+foreach ($autoloadPaths as $path) {
+    if (file_exists($path)) {
+        require $path;
+        break;
+    }
+}
 
 use DinoEngine\Installer;
 
-// Ejecuta el instalador manualmente
 Installer::cmdInstall();
