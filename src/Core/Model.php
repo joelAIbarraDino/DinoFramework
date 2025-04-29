@@ -56,7 +56,7 @@ class Model{
      * @param string $message a message to alert the user
      */
     public static function setAlerts(string $attribute, string $message):void{
-        self::$alerts[$attribute] = $message;
+        self::$alerts[$attribute][] = $message;
     }
 
     /**
