@@ -26,12 +26,12 @@ class Helpers{
     static function parseVal($input):mixed {
 
         if( strlen($input) === 0)
-            return null;
+            return "";
 
         //verificar si es null
         $nullValues = ['null', 'NULL', ''];
         if(in_array(strtolower($input), $nullValues))
-            return null;
+            return "";
 
         // Verificar booleano
         $boolValues = ['true', 'false' ,'on', 'off', 'yes', 'no'];
