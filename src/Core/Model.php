@@ -133,7 +133,7 @@ class Model{
         $query .= "MAX(:column) as max";
         $query .= " FROM ". static::$table;
 
-        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $stmt = self::executeSQL($query, [':column'=>$column]);
         $results = self::DatabaseResultToArray($stmt);
 
         return $results;
@@ -144,7 +144,7 @@ class Model{
         $query .= "MIN(:column) as min";
         $query .= " FROM ". static::$table;
 
-        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $stmt = self::executeSQL($query, [':column'=>$column]);
         $results = self::DatabaseResultToArray($stmt);
 
         return $results;
@@ -155,7 +155,7 @@ class Model{
         $query .= "AVG(:column) as avg";
         $query .= " FROM ". static::$table;
 
-        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $stmt = self::executeSQL($query, [':column'=>$column]);
         $results = self::DatabaseResultToArray($stmt);
 
         return $results;
@@ -166,7 +166,7 @@ class Model{
         $query .= "SUM(:column) as sum";
         $query .= " FROM ". static::$table;
 
-        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $stmt = self::executeSQL($query, [':column'=>$column]);
         $results = self::DatabaseResultToArray($stmt);
 
         return $results;
