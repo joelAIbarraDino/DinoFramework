@@ -120,6 +120,58 @@ class Model{
         return empty($results)?null:$results;
     }
 
+    public static function querySQL(string $sql, array $params = []):array|null{
+        
+        $stmt = self::executeSQL($sql, $params);
+        $results = self::DatabaseResultToArray($stmt);
+        
+        return empty($results)?null:$results;
+    }
+
+    public static function max(string $column):mixed{
+        $query = "SELECT ";
+        $query .= "MAX(:column) as max";
+        $query .= " FROM ". static::$table;
+
+        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $results = self::DatabaseResultToArray($stmt);
+
+        return $results;
+    }
+
+    public static function min(string $column):mixed{
+        $query = "SELECT ";
+        $query .= "MIN(:column) as min";
+        $query .= " FROM ". static::$table;
+
+        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $results = self::DatabaseResultToArray($stmt);
+
+        return $results;
+    }
+
+    public static function avg(string $column):mixed{
+        $query = "SELECT ";
+        $query .= "AVG(:column) as avg";
+        $query .= " FROM ". static::$table;
+
+        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $results = self::DatabaseResultToArray($stmt);
+
+        return $results;
+    }
+
+    public static function sum(string $column):mixed{
+        $query = "SELECT ";
+        $query .= "SUM(:column) as sum";
+        $query .= " FROM ". static::$table;
+
+        $stmt = self::executeSQL($query, [':value'=>$column]);
+        $results = self::DatabaseResultToArray($stmt);
+
+        return $results;
+    }
+
     //ok
     public static function where(string $column, string $operator, ?string $value):static|null{
         
@@ -303,6 +355,22 @@ class Model{
         return $attributes;   
     }
 
+    private static function DatabaseResultToArray($DatabaseResult):array{
+        switch(self::$driver){
+            case Database::MYSQLI_DRIVER:
+                $array = Database::mysqliResultToArray($DatabaseResult);
+                return $array;
+            break;
+            
+            case Database::PDO_DRIVER:
+                $array = $DatabaseResult->fetchAll(PDO::FETCH_ASSOC);
+                return $array;
+             break;
+            default:
+                throw new DatabaseConnectionException("Driver ".self::$driver." no supported", -1);
+        }
+    }
+
     private static function DatabaseResultToObjects($DatabaseResult):array{
         switch(self::$driver){
             case Database::MYSQLI_DRIVER:
@@ -375,7 +443,7 @@ class Model{
     //SQL execution methods
 
     /**
-     * Execute a sentence SQL with the correct driver
+     * Execute a sentence SQL
      * @param string $sql sentece SQL
      * @param array $params query params
      * @return mixed query result
