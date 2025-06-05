@@ -128,48 +128,112 @@ class Model{
         return empty($results)?null:$results;
     }
 
-    public static function max(string $column):mixed{
-        $query = "SELECT ";
-        $query .= "MAX(:column) as max";
-        $query .= " FROM ". static::$table;
+    public static function max(string $column, ?string $columnCondition = null, ?string $operator = null, ?string $value = null): mixed{
+        
+        //validando la columna principal
+        self::validateColumn($column);
 
-        $stmt = self::executeSQL($query, [':column'=>$column]);
+        // Validación si hay condición
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE', 'like']);
+            self::validateColumn($columnCondition);
+            self::validateValue($columnCondition, $value);
+        }
+
+        // Construcción de la consulta
+        $query = "SELECT MAX($column) as max FROM " . static::$table;
+
+        $params = [];
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            $query .= " WHERE $columnCondition $operator :value";
+            $params[':value'] = $value;
+        }
+
+        $stmt = self::executeSQL($query, $params);
         $results = self::DatabaseResultToArray($stmt);
 
-        return $results;
+        return $results[0]['max'] ?? null;
     }
 
-    public static function min(string $column):mixed{
-        $query = "SELECT ";
-        $query .= "MIN(:column) as min";
-        $query .= " FROM ". static::$table;
+    public static function min(string $column, ?string $columnCondition = null, ?string $operator = null, ?string $value = null): mixed{
+        
+        //validando la columna principal
+        self::validateColumn($column);
 
-        $stmt = self::executeSQL($query, [':column'=>$column]);
+        // Validación si hay condición
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE', 'like']);
+            self::validateColumn($columnCondition);
+            self::validateValue($columnCondition, $value);
+        }
+
+        // Construcción de la consulta
+        $query = "SELECT MIN($column) as min FROM " . static::$table;
+
+        $params = [];
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            $query .= " WHERE $columnCondition $operator :value";
+            $params[':value'] = $value;
+        }
+
+        $stmt = self::executeSQL($query, $params);
         $results = self::DatabaseResultToArray($stmt);
 
-        return $results;
+        return $results[0]['min'] ?? null;
     }
 
-    public static function avg(string $column):mixed{
-        $query = "SELECT ";
-        $query .= "AVG(:column) as avg";
-        $query .= " FROM ". static::$table;
+    public static function avg(string $column, ?string $columnCondition = null, ?string $operator = null, ?string $value = null): mixed{
+        
+        //validando la columna principal
+        self::validateColumn($column);
 
-        $stmt = self::executeSQL($query, [':column'=>$column]);
+        // Validación si hay condición
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE', 'like']);
+            self::validateColumn($columnCondition);
+            self::validateValue($columnCondition, $value);
+        }
+
+        // Construcción de la consulta
+        $query = "SELECT AVG($column) as avg FROM " . static::$table;
+
+        $params = [];
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            $query .= " WHERE $columnCondition $operator :value";
+            $params[':value'] = $value;
+        }
+
+        $stmt = self::executeSQL($query, $params);
         $results = self::DatabaseResultToArray($stmt);
 
-        return $results;
+        return $results[0]['avg'] ?? null;
     }
 
-    public static function sum(string $column):mixed{
-        $query = "SELECT ";
-        $query .= "SUM(:column) as sum";
-        $query .= " FROM ". static::$table;
+    public static function sum(string $column, ?string $columnCondition = null, ?string $operator = null, ?string $value = null): mixed{
+        
+        //validando la columna principal
+        self::validateColumn($column);
 
-        $stmt = self::executeSQL($query, [':column'=>$column]);
+        // Validación si hay condición
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE', 'like']);
+            self::validateColumn($columnCondition);
+            self::validateValue($columnCondition, $value);
+        }
+
+        // Construcción de la consulta
+        $query = "SELECT SUM($column) as sum FROM " . static::$table;
+
+        $params = [];
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            $query .= " WHERE $columnCondition $operator :value";
+            $params[':value'] = $value;
+        }
+
+        $stmt = self::executeSQL($query, $params);
         $results = self::DatabaseResultToArray($stmt);
 
-        return $results;
+        return $results[0]['sum'] ?? null;
     }
 
     //ok
