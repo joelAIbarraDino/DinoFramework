@@ -87,16 +87,24 @@ class Model{
     }
     
     //ok
-    public static function all(int $limit = 0):array{
+    public static function all(int $limit = 0, ?string $orderBy, ?string $sort):array{
+
+        if($orderBy != null && $sort != null){
+            self::validateColumn($orderBy);
+            self::validateSort($sort);
+        }
 
         if($limit < 0)
             throw new InvalidArgumentException("limit must be positive");
+
+        
 
         $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
         $query .= implode(', ', $columns);
         $query .= " FROM ". static::$table;
+        $query .= ($orderBy != null && $sort != null)?" ORDER BY ".$orderBy." ".$sort:"";
         $query .= $limit > 0 ?" LIMIT ".$limit :""; 
 
         $stmt = self::executeSQL($query);
@@ -106,13 +114,21 @@ class Model{
     }
 
     //ok
-    public static function belongsTo(string $column, string $value):array|null{
+    public static function belongsTo(string $column, string $value, ?string $orderBy, ?string $sort):array|null{
+
+        if($orderBy != null && $sort != null){
+            self::validateColumn($orderBy);
+            self::validateSort($sort);
+        }
+
+
         $columns = array_diff(static::$columns, static::$hidden);
 
         $query = "SELECT ";
         $query .= implode(', ', $columns);
         $query .= " FROM ". static::$table;
         $query .= " WHERE ". $column ." = :value";
+        $query .= ($orderBy != null && $sort != null)?" ORDER BY ".$orderBy." ".$sort:"";
 
         $stmt = self::executeSQL($query, [':value'=>$value]);
         $results = self::DatabaseResultToObjects($stmt);
@@ -234,6 +250,33 @@ class Model{
         $results = self::DatabaseResultToArray($stmt);
 
         return $results[0]['sum'] ?? null;
+    }
+
+    public static function count(string $column, ?string $columnCondition = null, ?string $operator = null, ?string $value = null): mixed{
+        
+        //validando la columna principal
+        self::validateColumn($column);
+
+        // Validación si hay condición
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            self::validateOperator($operator, ['=', '!=', '>', '<', '>=', '<=', 'LIKE', 'like']);
+            self::validateColumn($columnCondition);
+            self::validateValue($columnCondition, $value);
+        }
+
+        // Construcción de la consulta
+        $query = "SELECT COUNT($column) as count FROM " . static::$table;
+
+        $params = [];
+        if ($columnCondition !== null && $operator !== null && $value !== null) {
+            $query .= " WHERE $columnCondition $operator :value";
+            $params[':value'] = $value;
+        }
+
+        $stmt = self::executeSQL($query, $params);
+        $results = self::DatabaseResultToArray($stmt);
+
+        return $results[0]['count'] ?? null;
     }
 
     //ok
@@ -610,6 +653,12 @@ class Model{
         foreach($operators as $operator)
             self::validateOperator($operator, $operatorDic);
 
+    }
+
+    private static function validateSort (string $sort):void{
+        $validSort = ['DESC', 'desc', 'ASC', 'asc'];
+        if (!in_array($sort, $validSort)) 
+                throw new InvalidArgumentException("invalid sort keyword: $sort");
     }
 
     private static function validateColumn($column):void{
