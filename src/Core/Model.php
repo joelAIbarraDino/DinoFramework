@@ -87,7 +87,7 @@ class Model{
     }
     
     //ok
-    public static function all(int $limit = 0, ?string $orderBy, ?string $sort):array{
+    public static function all(int $limit = 0, ?string $orderBy = null, ?string $sort = null):array{
 
         if($orderBy != null && $sort != null){
             self::validateColumn($orderBy);
@@ -114,7 +114,7 @@ class Model{
     }
 
     //ok
-    public static function belongsTo(string $column, string $value, ?string $orderBy, ?string $sort):array|null{
+    public static function belongsTo(string $column, string $value, ?string $orderBy = null, ?string $sort = null):array|null{
 
         if($orderBy != null && $sort != null){
             self::validateColumn($orderBy);
