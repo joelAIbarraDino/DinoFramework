@@ -28,6 +28,10 @@ class Request{
         return self::getMethod() === 'delete';
     }
 
+    public static function isPATCH():bool{
+        return self::getMethod() === 'patch';
+    }
+
     public static function getURL():string{
         return $_SERVER['PATH_INFO']??'/';
     }
