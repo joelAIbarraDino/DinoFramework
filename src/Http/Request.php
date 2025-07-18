@@ -36,34 +36,45 @@ class Request{
         return $_SERVER['PATH_INFO']??'/';
     }
 
-    public static function getPostData(): array|bool{
+    public static function getPostData(array $excludeRaw = []): array|bool {
         if (empty($_POST)) {
             return false;
         }
 
         $data = [];
         foreach ($_POST as $key => $value) {
-            if(is_array($value)){
-                $arrayElements = [];
+            if (in_array($key, $excludeRaw)) {
+                $data[$key] = $value; // No sanitizar
+                continue;
+            }
 
-                foreach($value as $arrayValueElement)
+            if (is_array($value)) {
+                $arrayElements = [];
+                foreach ($value as $arrayValueElement)
                     $arrayElements[] = filter_var($arrayValueElement, FILTER_SANITIZE_SPECIAL_CHARS);
 
                 $data[$key] = $arrayElements;
-            }else
+            } else {
                 $data[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+            }
         }
 
         return $data;
     }
 
-    public static function getQueryParams(): array|bool{
+    public static function getQueryParams(array $excludeRaw = []): array|bool{
         if (empty($_GET)) {
             return false;
         }
 
         $data = [];
         foreach ($_POST as $key => $value) {
+            
+            if (in_array($key, $excludeRaw)) {
+                $data[$key] = $value; // No sanitizar
+                continue;
+            }
+
             if(is_array($value)){
                 $arrayElements = [];
 
