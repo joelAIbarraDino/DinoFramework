@@ -523,29 +523,45 @@ class Model{
      * update the attributes of a created instence
      * @param array $args news values of the attributes
      */
-    public function sincronize(array $args = []):void{
+    public function sincronize(array $args = []): void {
+        if (count(static::$fillable) === 0) {
+            throw new MassAssignmentException("Must add fillable attribute to allow mass assignment", -1);
+        }
 
-        if(count(static::$fillable) == 0)
-            throw new MassAssignmentException("Must add fillable attribute to allow mass asigment", -1);
+        $reflection = new \ReflectionClass($this);
 
-        foreach($args as $key=>$value){
-            if(!property_exists($this, $key))
-                throw new MassAssignmentException("Attribute $key does not exists", -2);
-
-            if(!in_array($key, static::$fillable))
-                throw new MassAssignmentException("Attribute $key is not fillable", -3);
-
-            if(is_null($value) && !in_array($key, static::$nulleable))
-                throw new MassAssignmentException("Attribute $key does not allow null values", -4);
-
-            try{
-                $this->$key = $value;
-            }catch(TypeError){
-                throw new MassAssignmentException("Attribute $key expect a value type ". gettype($key), -4);
+        foreach ($args as $key => $value) {
+            if (!property_exists($this, $key)) {
+                throw new MassAssignmentException("Attribute $key does not exist", -2);
             }
 
+            if (!in_array($key, static::$fillable)) {
+                throw new MassAssignmentException("Attribute $key is not fillable", -3);
+            }
+
+            if (is_null($value) && !in_array($key, static::$nulleable)) {
+                throw new MassAssignmentException("Attribute $key does not allow null values", -4);
+            }
+
+            // Obtener tipo declarado
+            $property = $reflection->getProperty($key);
+            $type = $property->getType();
+
+            if ($type && !$type->isBuiltin()) {
+                // Evitar asignar tipos no escalares automáticamente
+                throw new MassAssignmentException("Cannot auto-cast non-scalar type for $key", -5);
+            }
+
+            // Convertir al tipo adecuado si es necesario
+            if (!is_null($value) && $type) {
+                $typeName = $type->getName();
+                settype($value, $typeName);
+            }
+
+            $this->$key = $value;
         }
     }
+
 
     //SQL execution methods
 
